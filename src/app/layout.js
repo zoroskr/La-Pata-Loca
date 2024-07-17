@@ -1,5 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Sidebar from "./components/Sidebar";
+import { Providers } from "./Providers";
+import { CartProvider } from "./context/CartContext";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +15,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className="flex flex-row">
+        <Providers>
+          <CartProvider>
+            <div className="h-lvh">
+              <Sidebar />
+            </div>
+            <div className="flex justify-center items-center w-full">
+              {children}
+            </div>
+          </CartProvider>
+        </Providers>
+      </body>
     </html>
   );
 }
