@@ -4,7 +4,9 @@ import { Card } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import { deleteProduct } from "@/app/services/products.api";
 import Swal from 'sweetalert2'
+import CartContext from "@/app/context/CartContext";
 import withReactContent from 'sweetalert2-react-content'
+import { useContext } from "react";
 
 export default function Component({
   productId,
@@ -16,7 +18,16 @@ export default function Component({
 }) {
   const { data: session } = useSession();
   const MySwal = withReactContent(Swal)
+  const { addItemToCart } = useContext(CartContext);
 
+  const addToCartHandler = () => {
+    addItemToCart({
+      product: productId,
+      name: title,
+      price: price,
+      image: imgSrc,
+    });
+  };
 
   const handleDelete = async () => {
     const isDeleted = await deleteProduct(productId);
@@ -53,8 +64,9 @@ export default function Component({
         <a
           href="#"
           className="rounded-lg bg-cyan-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-800 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
+          onClick={addToCartHandler}
         >
-          Add to cart
+          Agregar al Carrito
         </a>
         {session?.user?.role == "admin" && (
           <div className="flex flex-col justify-center items-center overflow-hidden gap-3">

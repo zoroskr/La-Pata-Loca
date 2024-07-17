@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 
 import CartContext from "@/app/context/CartContext";
 import Link from "next/link";
+import Image from "next/image";
 
 const Cart = () => {
   const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
@@ -11,8 +12,6 @@ const Cart = () => {
   const increaseQty = (cartItem) => {
     const newQty = cartItem?.quantity + 1;
     const item = { ...cartItem, quantity: newQty };
-
-    if (newQty > Number(cartItem.stock)) return;
 
     addItemToCart(item);
   };
@@ -57,8 +56,8 @@ const Cart = () => {
                         <div className="w-full lg:w-2/5 xl:w-2/4">
                           <figure className="flex leading-5">
                             <div>
-                              <div className="block w-16 h-16 rounded border border-gray-200 overflow-hidden">
-                                <img src={cartItem.image} alt={cartItem.name} />
+                              <div className="block w-20 h-8 rounded border border-gray-200 overflow-hidden">
+                                <Image width={200} height={200} src={`/${cartItem.image}`} alt={cartItem.name} />
                               </div>
                             </div>
                             <figcaption className="ml-3">
@@ -66,10 +65,6 @@ const Cart = () => {
                                 <a href="#" className="hover:text-blue-600">
                                   {cartItem.name}
                                 </a>
-                              </p>
-                              <p className="mt-1 text-gray-400">
-                                {" "}
-                                Seller: {cartItem.seller}
                               </p>
                             </figcaption>
                           </figure>
@@ -161,14 +156,14 @@ const Cart = () => {
                   </ul>
 
                   <a className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 cursor-pointer">
-                    Continue
+                    Continuar
                   </a>
 
                   <Link
-                    href="/"
+                    href="/products"
                     className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-green-600 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
                   >
-                    Back to shop
+                    Volver a la Tienda
                   </Link>
                 </article>
               </aside>
