@@ -1,12 +1,34 @@
 "use client";
 
-import React, { useContext } from "react";
-
+import React, { useContext, useState } from "react";
 import CartContext from "@/app/context/CartContext";
 import Link from "next/link";
 import Image from "next/image";
+import Map from "@/app/components/Map"
+import { Label, Select } from "flowbite-react";
 
 const Cart = () => {
+  const [paymentMethod, setPaymentMethod] = useState("Efectivo 10% OFF");
+
+  const handlePaymentMethodChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+
+  const [sendMethod, setSendMethod] = useState("Retiro en sucursal");
+
+  const handleSendMethodChange = (event) => {
+    setSendMethod(event.target.value);
+  };
+
+  // Obtén la fecha y hora actual
+  const currentDate = new Date();
+
+  // Añade 24 horas para obtener la fecha de mañana
+  currentDate.setDate(currentDate.getDate() + 1);
+
+  // Formatea la fecha a YYYY-MM-DD
+  const minDate = currentDate.toISOString().split("T")[0];
+
   const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
 
   const increaseQty = (cartItem) => {
@@ -30,19 +52,20 @@ const Cart = () => {
     0
   );
 
-  const taxAmount = (amountWithoutTax * 0.15).toFixed(2);
-
-  const totalAmount = (Number(amountWithoutTax) + Number(taxAmount)).toFixed(2);
+  const discountPercentage = paymentMethod === "Efectivo 10% OFF" ? 0.1 : 0;
+  const taxAmount = (amountWithoutTax * discountPercentage).toFixed(2);
+  const totalAmount = (amountWithoutTax - taxAmount).toFixed(2);
 
   return (
     <>
+      {/*
       <section className="py-5 sm:py-7 bg-blue-100">
         <div className="container max-w-screen-xl mx-auto px-4">
           <h2 className="text-3xl font-semibold mb-2">
             {cart?.cartItems?.length || 0} Item(s) in Cart
           </h2>
         </div>
-      </section>
+      </section> */}
 
       {cart?.cartItems?.length > 0 && (
         <section className="py-10">
@@ -51,13 +74,18 @@ const Cart = () => {
               <main className="md:w-3/4">
                 <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
                   {cart?.cartItems?.map((cartItem) => (
-                    <div>
+                    <div key={cartItem.name}>
                       <div className="flex flex-wrap lg:flex-row gap-5  mb-4">
                         <div className="w-full lg:w-2/5 xl:w-2/4">
                           <figure className="flex leading-5">
                             <div>
                               <div className="block w-20 h-8 rounded border border-gray-200 overflow-hidden">
-                                <Image width={200} height={200} src={`/${cartItem.image}`} alt={cartItem.name} />
+                                <Image
+                                  width={200}
+                                  height={200}
+                                  src={`/${cartItem.image}`}
+                                  alt={cartItem.name}
+                                />
                               </div>
                             </div>
                             <figcaption className="ml-3">
@@ -82,7 +110,7 @@ const Cart = () => {
                             </button>
                             <input
                               type="number"
-                              className="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900  outline-none custom-input-number"
+                              className="focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900  outline-none custom-input-number"
                               name="custom-input-number"
                               value={cartItem.quantity}
                               readOnly
@@ -132,7 +160,7 @@ const Cart = () => {
                 <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
                   <ul className="mb-5">
                     <li className="flex justify-between text-gray-600  mb-1">
-                      <span>Amount before Tax:</span>
+                      <span>Precio antes del Descuento:</span>
                       <span>${amountWithoutTax}</span>
                     </li>
                     <li className="flex justify-between text-gray-600  mb-1">
@@ -146,14 +174,54 @@ const Cart = () => {
                       </span>
                     </li>
                     <li className="flex justify-between text-gray-600  mb-1">
-                      <span>TAX:</span>
+                      <span>Descuento:</span>
                       <span>${taxAmount}</span>
                     </li>
                     <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
-                      <span>Total price:</span>
+                      <span>Precio Total:</span>
                       <span>${totalAmount}</span>
                     </li>
                   </ul>
+
+                  <div className="max-w-md py-3">
+                    <div className="mb-2 block">
+                      <Label htmlFor="calendar" value="Selecciona una fecha:" />
+                    </div>
+                    <input type="date" id="calendar" required min={minDate} />
+                  </div>
+
+                  <div className="max-w-md py-3">
+                    <div className="mb-2 block">
+                      <Label htmlFor="sendMethod" value="Metodos de envio:" />
+                    </div>
+                    <Select
+                      id="sendMethod"
+                      required
+                      onChange={handleSendMethodChange}
+                    >
+                      <option>Retiro en Sucursal</option>
+                      <option>Envio a domicilio</option>
+                    </Select>
+                  </div>
+                  
+                  <Map/>
+
+                  <div className="max-w-md py-3">
+                    <div className="mb-2 block">
+                      <Label htmlFor="paymentMethod" value="Metodos de pago:" />
+                    </div>
+                    <Select
+                      id="paymentMethod"
+                      required
+                      onChange={handlePaymentMethodChange}
+                    >
+                      <option>Efectivo 10% OFF</option>
+                      <option>Debito</option>
+                      <option>Credito</option>
+                      <option>Mercadopago</option>
+                    </Select>
+                  </div>
+
 
                   <a className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 cursor-pointer">
                     Continuar

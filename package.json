@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.4.1",
+    "@reach/combobox": "^0.18.0",
+    "@react-google-maps/api": "^2.19.3",
+    "@vis.gl/react-google-maps": "^1.1.0",
     "bcryptjs": "^2.4.3",
     "flowbite-react": "^0.10.1",
     "mongodb": "^6.8.0",
@@ -19,7 +22,8 @@
     "react": "^18",
     "react-dom": "^18",
     "sweetalert2": "^11.12.2",
-    "sweetalert2-react-content": "^5.0.7"
+    "sweetalert2-react-content": "^5.0.7",
+    "use-places-autocomplete": "^4.0.1"
   },
   "devDependencies": {
     "eslint": "^8",
