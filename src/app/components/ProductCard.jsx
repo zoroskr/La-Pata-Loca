@@ -1,12 +1,12 @@
 "use client";
 
-import { Card } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import { deleteProduct } from "@/app/services/products.api";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import CartContext from "@/app/context/CartContext";
-import withReactContent from 'sweetalert2-react-content'
+import withReactContent from "sweetalert2-react-content";
 import { useContext } from "react";
+import Image from "next/image";
 
 export default function Component({
   productId,
@@ -15,9 +15,11 @@ export default function Component({
   title,
   price,
   description,
+  unitsAvailables = "20 Bowls available",
+  image = "/food-example.jpg",
 }) {
   const { data: session } = useSession();
-  const MySwal = withReactContent(Swal)
+  const MySwal = withReactContent(Swal);
   const { addItemToCart } = useContext(CartContext);
 
   const addToCartHandler = () => {
@@ -48,19 +50,34 @@ export default function Component({
   };
 
   return (
-    <Card className="max-w-sm" imgAlt={imgAlt} imgSrc={imgSrc}>
-      <a href="#">
-        <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+    <div className="bg-transparent w-[192px] h-[260px] flex justify-center items-center "> 
+    <div className="max-w-sm bg-[#1F1D2B] w-[192px] h-[226px] rounded-xl relative">
+      <Image
+        src={image}
+        alt={image}
+        width={150}
+        height={135}
+        className="rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      />
+
+      <div className="flex flex-col justify-end items-center h-full w-full p-6 text-center">
+
+        <h5 className="text-white text-[14px] font-medium leading-[18.2px] mb-2">
           {title}
         </h5>
-      </a>
-      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-        {description}
-      </p>
-      <div className="flex items-center justify-between mt-4 gap-4">
-        <span className="text-3xl font-bold text-gray-900 dark:text-white">
+
+        <span className="text-white text-center font-normal leading-[19.6px] mb-1">
           ${price}
         </span>
+
+        <p className="text-[14px] text-[#ABBBC2] text-center font-normal leading-[19.6px]">
+          {unitsAvailables}
+        </p>
+      </div>  
+      </div>
+      {/*}
+        <div className="flex items-center justify-between mt-4 gap-4"></div>
+
         <a
           href="#"
           className="rounded-lg bg-cyan-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-800 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
@@ -68,6 +85,7 @@ export default function Component({
         >
           Agregar al Carrito
         </a>
+
         {session?.user?.role == "admin" && (
           <div className="flex flex-col justify-center items-center overflow-hidden gap-3">
             <button
@@ -83,8 +101,7 @@ export default function Component({
               Editar Publicación
             </a>
           </div>
-        )}
-      </div>
-    </Card>
+        )}*/} 
+      </div>  
   );
 }
